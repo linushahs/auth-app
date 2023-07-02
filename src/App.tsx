@@ -1,33 +1,15 @@
-import { useState } from "react";
 import "./App.css";
+import LoginForm from "./components/LoginForm";
+import SignupForm from "./components/SignupForm";
 
 function App() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
   return (
     <div>
-      <form action="">
-        Username:
-        <input
-          type="text"
-          name=""
-          id=""
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <br />
-        Password:
-        <input
-          type="password"
-          name=""
-          id=""
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <br />
-        <input type="submit" value="Submit" />
-      </form>
+      <h1>LoginForm:</h1>
+      <LoginForm /> <br />
+      <br />
+      <h1>SignupForm: </h1>
+      <SignupForm />
     </div>
   );
 }
