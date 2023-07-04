@@ -1,36 +1,33 @@
 import { useMutation } from "@tanstack/react-query";
+import { Variables } from "graphql-request";
 import { FormEventHandler, useState } from "react";
+import { graphQLClient } from "../App";
 import { signup } from "../graphql";
-import { request } from "graphql-request";
 
 interface SignupFormInput {
-  email: string;
-  password: string;
+  input: {
+    email: string;
+    password: string;
+  };
 }
 
 export default function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const signupMutation = useMutation<void, Error, SignupFormInput>({
-    mutationFn: async (data) => {
-      await request({
-        url: "https://api.internsathi.com/graphql",
-        document: signup,
-        variables: {
-          input: {
-            email,
-            password,
-          },
-        },
-      });
+  const { data, isSuccess, mutate, isLoading } = useMutation({
+    mutationFn: async (input: Variables) => {
+      const data = await graphQLClient.request(signup, { input });
+      return data;
     },
   });
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    signupMutation.mutate({ email, password });
+    mutate({ email, password });
   };
+
+  if (isSuccess) return <h1>{(data as any).toString()}</h1>;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -48,7 +45,7 @@ export default function SignupForm() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <br />
-      <input type="submit" value="Submit" disabled={signupMutation.isLoading} />
+      <input type="submit" value="Submit" disabled={isLoading} />
     </form>
   );
 }
