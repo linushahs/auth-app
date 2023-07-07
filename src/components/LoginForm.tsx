@@ -48,6 +48,7 @@ export default function LoginForm() {
         id=""
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        className="mb-2"
       />
       <br />
       Password:

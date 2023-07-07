@@ -20,3 +20,9 @@ export const sendVerificationOTP = gql`
     sendVerificationOtp(input: $input)
   }
 `;
+
+export const verifyAccount = gql`
+  mutation verifyAccount($input: VerifyAccountInput!) {
+    verifyAccount(input: $input)
+  }
+`;
