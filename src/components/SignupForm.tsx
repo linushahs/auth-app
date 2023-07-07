@@ -1,33 +1,26 @@
-import { useMutation } from "@tanstack/react-query";
-import { Variables } from "graphql-request";
 import { FormEventHandler, useState } from "react";
-import { graphQLClient } from "../App";
-import { signup } from "../graphql";
-
-interface SignupFormInput {
-  input: {
-    email: string;
-    password: string;
-  };
-}
+import { sendVerificationFn, signupFn } from "../actions/apiActions";
+import { useMutation } from "@tanstack/react-query";
 
 export default function SignupForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("suniltraveler2004@gmail.com");
+  const [password, setPassword] = useState("Traveler@048");
 
-  const { data, isSuccess, mutate, isLoading } = useMutation({
-    mutationFn: async (input: Variables) => {
-      const data = await graphQLClient.request(signup, { input });
-      return data;
+  const signupMn = useMutation({
+    mutationFn: signupFn,
+    onError: (error) => {
+      console.log(error);
     },
   });
+  const sendVerificationMn = useMutation({ mutationFn: sendVerificationFn });
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    mutate({ email, password });
+
+    signupMn.mutate({ email, password });
   };
 
-  if (isSuccess) return <h1>{(data as any).toString()}</h1>;
+  if (signupMn.isSuccess) sendVerificationMn.mutate({ email });
 
   return (
     <form onSubmit={handleSubmit}>
@@ -37,6 +30,7 @@ export default function SignupForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
+      {signupMn.isError && <p>Email already exists</p>}
       <br />
       Password:
       <input
@@ -45,7 +39,7 @@ export default function SignupForm() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <br />
-      <input type="submit" value="Submit" disabled={isLoading} />
+      <input type="submit" value="Submit" disabled={signupMn.isLoading} />
     </form>
   );
 }

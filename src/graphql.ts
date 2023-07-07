@@ -16,7 +16,7 @@ export const signin = gql`
 `;
 
 export const sendVerificationOTP = gql`
-  mutation sendVerificationOtp($input: VerificationOtpInput) {
+  mutation sendVerificationOtp($input: VerificationOtpInput!) {
     sendVerificationOtp(input: $input)
   }
 `;
